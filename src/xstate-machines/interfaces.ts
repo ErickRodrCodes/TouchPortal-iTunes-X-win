@@ -22,7 +22,7 @@ export interface ITPITunesStateContext {
       [key: string]: IITPlaylist,
     },
     valueChoices: any[],
-
+    currentName: string,
   };
   CurrentTrackName: TPortalKeyValue;
   CurrentTrackAlbum: TPortalKeyValue;

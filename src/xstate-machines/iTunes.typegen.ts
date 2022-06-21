@@ -12,6 +12,7 @@ export interface Typegen0 {
     GetRepeat: 'getRepeat';
     GetCurrentTrackPlaytime: 'getCurrentTrackPlaytime';
     GetPlaylists: 'getPlaylists';
+    SetPlayPlaylist: 'setPlayPlaylist';
   };
   internalEvents: {
     'xstate.init': { type: 'xstate.init' };

@@ -1,8 +1,7 @@
 import { Client } from 'touchportal-api';
-import { peekAndDispatchMessages, Object as WinaxObject } from 'winax';
-import { interpret, Interpreter } from 'xstate';
+import { peekAndDispatchMessages } from 'winax';
+import { interpret } from 'xstate';
 
-import { _iTunes } from './interfaces/iTunes';
 import { player } from './xstate-machines/iTunes';
 
 const pluginId = "TPiTunes";
@@ -13,7 +12,7 @@ const TPITunesState = {app: interpret(player)};
 
 // Do this ONLY when you are connected. This is the only time you should call this function.
 TPClient.on('connected', (data) => {
-
+  console.log(`${pluginId} connected`);
   // first, create a recurrent send of actions to xstate so this concurrent
   // machine can react to the actions
   TPITunesState.app.start();
@@ -41,19 +40,35 @@ TPClient.on('connected', (data) => {
         stateArray.push(iTunesStates[key]);
       }
     });
-    // console.log(new Date(), {stateArray});
     TPClient.stateUpdateMany(stateArray);
-  }, 1000);
+  }, 100);
 
   //finally we integrate any message of touchportal and trigger the respective transitions.
-  TPClient.on('Action', async (data, hold) => {
-    console.log({data});
-    const { actionId } = data;
-    switch (actionId) {
-      case 'itunes_toggle_play_action':
-        TPITunesState.app.send(TPITunesState.app.state.context.PlayerState.value === 'Playing' ? 'setStop' : 'setPlay');
-        break;
-    }
+  TPClient.on('Close', () => {
+    clearInterval(setTransitions);
+    clearInterval(updateInterval);
   });
+
+});
+
+TPClient.on('Action', async (data, hold) => {
+  const { actionId } = data;
+  switch (actionId) {
+    case 'itunes_toggle_play_action':
+      if (TPITunesState.app.state.context.PlayerState.value === 'Playing') {
+        TPITunesState.app.send('setStop');
+      } else {
+        TPITunesState.app.send('setPlay');
+      }
+      break;
+    case 'itunes_play_playlist':
+      if (data.data.length > 0) {
+        const playlistName = data.data[0].value;
+        const shuffleStatus = data.data[1].value;
+        const repeatStatus = data.data[2].value;
+        TPITunesState.app.send('setPlayPlaylist', { playlistName, shuffleStatus, repeatStatus });
+      }
+      break;
+  }
 });
 

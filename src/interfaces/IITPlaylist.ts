@@ -3,7 +3,7 @@ import {
   ITPlaylistPrintKind,
   ITPlaylistRepeatMode,
   ITPlaylistSearchField
-} from '../iTunes/consts';
+} from '../consts';
 import { IITSource } from './IITSource';
 import { IITTrackCollection } from './IITTrackCollection';
 
@@ -55,7 +55,7 @@ export interface IITPlaylist {
    * Boolean attributes are 0/1 instead of false/true
    * @param setShuffle
    */
-  Shuffle: 1 | 0;
+  Shuffle: boolean;
   /**
    * Returns the total size of all songs in the playlist (in bytes).
    */

@@ -12,7 +12,7 @@ const iTunesObject = new WinaxObject("iTunes.Application") as _iTunes;
 /* Creating a state machine. */
 
 export const player
-/** @xstate-layout N4IgpgJg5mDOIC5QBUD2BXAxgCwAqoCcAXAQwBsACAS2XQDs5cySBPMAigWRJyoYDoAgughVUFJq36SWAYlhgiAZSKoADolBrUsKkTF1NIAB6IATAEYAzPwCc92wHYrVs7YuOArABYzAGhAWRF8bAAYLBysADm9PCO8LAF9EgLQsPEJSShp6RmY2Dm5eAWFRcRl+FXV5RRkjbV19VEMkE3NrOwdnV3cvXwCghDjQ-lCzUNDY608zBO9k1IwcfGJyaloGWBl2Lh5sPjAhETEJfNkYIhkVEiJ0eFaGvQMjUwQIz34ANkcnUM-7MYeJwDcwzUYReyeKK2b4whYgNLLTJrHKbbaFPYHSrNKDnRRKHH1HRPZovcyhKL8byOT6eRzQixmKIWOIghC2Ty2cH2aJTWzeKxJFIIpYZVbZDZ5Vg7Ir7AQANVQZHQAFswHiiIrlWqiY1nq1XuMLFTYq4GUyWRY2e5ufYft4olYnPZ4YixVl1rktvkZZiBEpsOgAGZBsjqi4B4OhsC6kktUCG0I2C1mTyfFkO0JpxxsiyMkbhexRGm2JNRKKeV2ilYe1FSgq7YqHABKYDUYBuGtb7Zusaa8baCHGZi+DoFHLin3C5dzFtG4yT-yZjqdVfSNZRku90oxTf4AGF0AQCGA6EQKMgCDwANanVj6NUaw-H09ES83mQPmMPYn9slvKF+E8J1Qi8R0fEZKw2U+KxHHnCYpisGY5jXJFxU9NEfV3OVDhkMgqFgIgNTwgiiHuLRf31BNyRGalaU+VM2R+SlC3sIEkNsMwzGSYU6FQCA4CMN0NwlL10UbHCjjKO8WGkfI+yowcXBHWYun5R1bGZNlvG8T5+CQlxgM8UCEkdVD3U3MSsIkrFShOCoqg0H89VJA1EEcHNAmCAV+ArQykJMiwYnMkSMPrX09zs8p5OcuN-2AtkAttDloVhT4QuRUTMJ3Gz-UJWK-zchBqVzLNjVY3k4n5KwMvQuttwbWUsS1VVvwolyB1eEqvLeR1kvtDSolq2st3Epr-UDEMwwU1zqOKzzBkZRlbWLf4ywrYbLOyxq-RbNsOyIGbOuCBbEGsZx4MXTjyxcWxNqy8LsKxZ8TzPC8r0wW9PyoHUCsUrrToQRw3EuxDkIseZhWEzKwoaiLJJIwijv-brBmhAsIV6WwOK4+7YbG3bkaKswoJ6oLkocSny24nigA */
+/** @xstate-layout N4IgpgJg5mDOIC5QBUD2BXAxgCwAqoCcAXAQwBsACAS2XQDs5cySBPMAigWRJyoYDoAgughVUFJq36SWAYlhgiAZSKoADolBrUsKkTF1NIAB6IAtAGYAbAAZ+ViwFYATFYDsATjfO3F548cAGhAWRAsARit+Cw8ADmdnGwD3RwAWcMcAX0zgtCw8QlJKGnpGZjYObl4BYVFxGX4VdXlFGSNtXX1UQyQTc2s7Bxd3Lx8-AODQhFSbC2i4n3DY1KtYm3DU1OzcjBx8YnJqWgZYGXYuHmw+MCERMQly2RgiGRUSInR4Xo69AyNTBCWNyxfgeAKOCypCKRDw2WaTRAbRzzeIJWyxJy2LY5EB5PaFQ4lE5nSqXa6NbpQJ6KJSU9o6X7df79KxRDKxVnOCyxWEeZyxIIhRAC5woyKOSJOWbhba43YFA7FY5lVjnKpXAQANVQZHQAFswNSiNrdQb6Z0-r0AUC5ksPB5wlyeTY+QKEYCMvZ1m43BCZjZ0h5VrK8QqikdSqdymqyQIlNh0AAzRNkQ3PeNJlNgc2Mnqga0WNzhaIQuIS1JFmxc93hdZzGLxDYzcIeVICkPy-bhokqioXao3ABKYDUYHeRuHo-eOa6eb6gMLxbiq29jlmNis4Rr4TcqRRrmsMxi2J2+S7hOVUdVpIH-AAwugCAQwHQiBRkAQeABrB6sfQGo0HyfF8iA-b8ZH-bNvgZWdmUBdIohdTcrDSVlUjBNx3QhOwG0WZYVw2DszwJJVIxJfsNRuGQyCoWAiCNajaKIL4tBgy1836R1QSrRIoSsINYm8d1+OLXCljXCUXAsIj8UVCNiWjG9KOkcoaLoloXnKRi6Jndj50sRJQQsSE235OFwh3d0fRwhZ1yDVJ+WyHE6FQCA4CMUNz1IhTrwo8lanuBo2mgi0mStcxnAc6IRShJwpTLd1jI8fhfHZKs7WBQsZLDC8yMUvyajuepykaVQNBC3M4LMdC3HsJxIvCCx1lhTxMKFBBjNqrk0ucDLlmyrz5N7GNbwC4rWF0sKOMBFxiyGBqmpbGxYndSL6wWLl+O5RwvAGkihqvPt1XJWk6CgSa52tFxavm9JFthFb2tbPcG3FSU1wiPa5J7Q6RuUk19Sg1jQsu8xrrqlw7ua5arKiXDIpQ+1HDWaScU8-afvI464wTZNUwuqrwduxroceqYLKSfcm2atssjRzsMcvLHYyHEcxyIAnwpmnwIYW0ma1cOGFgcKwj1bL7uyZ-LsZuIDn1fd9P0wH8IKoM0KtgrmzCJ+qoaWsnECsBJ9yLfC1kI+niO+qXfJllTWDUjmNb0q6eeJ+6YfazKqYFJIMi5CXcp8o6Wc56btYlXm9Ye90zFiEFbB3MFXDieOPCczIgA */
 = createMachine({
   context: {
     PlayerState: { id: 'itunes_playing_state', value: '' },
@@ -36,6 +36,7 @@ export const player
       value: '',
       valueChoices: [],
       index: {},
+      currentName:''
     },
     CurrentStreamTitle: {
       id: 'itunes_current_stream_title',
@@ -63,6 +64,7 @@ export const player
         | 'toggleShuffle'
         | 'setStop'
         | 'setPlay'
+        | 'setPlayPlaylist'
         | 'searchArtwork'
         | 'searchArtworkSuccess'
         | 'searchArtworkFailure'
@@ -99,21 +101,16 @@ export const player
     Shuffle: {on: {getShuffle: {actions: 'GetShuffle'}}},
     Repeat: {on: {getRepeat: {actions: 'GetRepeat'}}},
     'Current Track Playtime': {on: {getCurrentTrackPlaytime: {actions: 'GetCurrentTrackPlaytime'}}},
-    Playlist: {on: {getPlaylists: {actions: 'GetPlaylists'}}},
+    Playlist: {
+      on: {
+        getPlaylists: {actions: 'GetPlaylists'},
+        setPlayPlaylist: {actions: 'SetPlayPlaylist'},
+      },
+    },
   },
   id: 'TouchPortal iTunesPlayer Machine',
 }, {
   actions: {
-    SetPlay: assign((context) => {
-      context.PlayerState.value = "Playing";
-      iTunesObject.Play();
-      return context;
-    }),
-    SetStop: assign((context) => {
-      context.PlayerState.value = "Stopped";
-      iTunesObject.Stop();
-      return context;
-    }),
     GetSong: assign((context) => {
       let songName = '';
       if (iTunesObject.PlayerState !== ITPlayerStateStopped) {
@@ -122,8 +119,9 @@ export const player
             songName = iTunesObject.CurrentStreamTitle;
             const songObject = formatCurrentStreamTitle(songName);
             context.CurrentTrackName.value = songObject.track_name;
-            context.CurrentTrackAlbum.value = iTunesObject.CurrentStreamURL;
+            context.CurrentTrackAlbum.value = `${context.PlayLists.currentName}`;
             context.CurrentTrackArtist.value = songObject.track_artist;
+
             return context;
           }
           return context;
@@ -179,7 +177,7 @@ export const player
     }),
     GetPlayStatus: assign((context) => {
 
-      context.PlayerState.value = iTunesObject.PlayerState ? "Playing" : "Stopped";
+      context.PlayerState.value = iTunesObject.PlayerState === 1 ? "Playing" : "Stopped";
       return context;
     }),
     GetPlaylists: assign((context, event: any) => {
@@ -197,7 +195,8 @@ export const player
           const playlistName = playlist.Name.replace(/’/, "'");
           const item = context.PlayLists.index[playlistName];
           if (item === undefined) {
-            context.PlayLists.index[playlistName] = playlistName;
+            context.PlayLists.index[playlistName] = playlist;
+            context.PlayLists.currentName = playlistName;
             updateNeeded = true;
           }
           playlistNames.push(playlistName);
@@ -212,6 +211,38 @@ export const player
           );
         }
       }
+      return context;
+    }),
+
+    SetPlay: assign((context) => {
+      context.PlayerState.value = "Playing";
+      iTunesObject.Play();
+      return context;
+    }),
+    SetStop: assign((context) => {
+      context.PlayerState.value = "Stopped";
+      iTunesObject.Stop();
+      return context;
+    }),
+    SetPlayPlaylist: assign((context, event:any) => {
+      const { playlistName, shuffleStatus, repeatStatus } = event;
+      const playlist = context.PlayLists.index[playlistName];
+      // TODO: check if playlist is valid
+      playlist.Shuffle = shuffleStatus === 'On' ? true : false;
+      if (repeatStatus === 'Off') {
+        playlist.SongRepeat = 0;
+      }
+      if (repeatStatus === 'Song') {
+        playlist.SongRepeat = 1;
+      } else {
+        playlist.SongRepeat = 2;
+      }
+
+      context.Repeat.value = repeatStatus;
+      context.Shuffle.value = shuffleStatus;
+      context.PlayLists.currentName = playlistName;
+
+      playlist.PlayFirstTrack();
       return context;
     }),
   }
