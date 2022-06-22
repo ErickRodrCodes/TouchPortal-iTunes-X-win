@@ -1,11 +1,10 @@
-import { searchSong } from '@tbogard/itunes-search';
 import { Object as WinaxObject } from 'winax';
 import { assign, createMachine } from 'xstate';
 
 import { ITPlayerStateStopped, LIBRARY_TYPE, pluginId } from '../consts';
 import { IITSource } from '../interfaces/IITSource';
 import { _iTunes } from '../interfaces/iTunes';
-import { ITPITunesStateContext, TPEvent } from './interfaces';
+import { ITPITunesStateContext } from './interfaces';
 
 const iTunesObject = new WinaxObject("iTunes.Application") as _iTunes;
 
