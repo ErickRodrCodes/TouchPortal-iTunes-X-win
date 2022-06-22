@@ -5,14 +5,14 @@ import { assign, createMachine } from 'xstate';
 import { ITPlayerStateStopped, LIBRARY_TYPE, pluginId } from '../consts';
 import { IITSource } from '../interfaces/IITSource';
 import { _iTunes } from '../interfaces/iTunes';
-import { ITPITunesStateContext } from './interfaces';
+import { ITPITunesStateContext, TPEvent } from './interfaces';
 
 const iTunesObject = new WinaxObject("iTunes.Application") as _iTunes;
 
 /* Creating a state machine. */
 
 export const player
-/** @xstate-layout N4IgpgJg5mDOIC5QBUD2BXAxgCwAqoCcAXAQwBsACAS2XQDs5cySBPMAigWRJyoYDoAgughVUFJq36SWAYlhgiAZSKoADolBrUsKkTF1NIAB6IAtAGYAbAAZ+ViwFYATFYDsATjfO3F548cAGhAWRAsARit+Cw8ADmdnGwD3RwAWcMcAX0zgtCw8QlJKGnpGZjYObl4BYVFxGX4VdXlFGSNtXX1UQyQTc2s7Bxd3Lx8-AODQhFSbC2i4n3DY1KtYm3DU1OzcjBx8YnJqWgZYGXYuHmw+MCERMQly2RgiGRUSInR4Xo69AyNTBCWNyxfgeAKOCypCKRDw2WaTRAbRzzeIJWyxJy2LY5EB5PaFQ4lE5nSqXa6NbpQJ6KJSU9o6X7df79KxRDKxVnOCyxWEeZyxIIhRAC5woyKOSJOWbhba43YFA7FY5lVjnKpXAQANVQZHQAFswNSiNrdQb6Z0-r0AUC5ksPB5wlyeTY+QKEYCMvZ1m43BCZjZ0h5VrK8QqikdSqdymqyQIlNh0AAzRNkQ3PeNJlNgc2Mnqga0WNzhaIQuIS1JFmxc93hdZzGLxDYzcIeVICkPy-bhokqioXao3ABKYDUYHeRuHo-eOa6eb6gMLxbiq29jlmNis4Rr4TcqRRrmsMxi2J2+S7hOVUdVpIH-AAwugCAQwHQiBRkAQeABrB6sfQGo0HyfF8iA-b8ZH-bNvgZWdmUBdIohdTcrDSVlUjBNx3QhOwG0WZYVw2DszwJJVIxJfsNRuGQyCoWAiCNajaKIL4tBgy1836R1QSrRIoSsINYm8d1+OLXCljXCUXAsIj8UVCNiWjG9KOkcoaLoloXnKRi6Jndj50sRJQQsSE235OFwh3d0fRwhZ1yDVJ+WyHE6FQCA4CMUNz1IhTrwo8lanuBo2mgi0mStcxnAc6IRShJwpTLd1jI8fhfHZKs7WBQsZLDC8yMUvyajuepykaVQNBC3M4LMdC3HsJxIvCCx1lhTxMKFBBjNqrk0ucDLlmyrz5N7GNbwC4rWF0sKOMBFxiyGBqmpbGxYndSL6wWLl+O5RwvAGkihqvPt1XJWk6CgSa52tFxavm9JFthFb2tbPcG3FSU1wiPa5J7Q6RuUk19Sg1jQsu8xrrqlw7ua5arKiXDIpQ+1HDWaScU8-afvI464wTZNUwuqrwduxroceqYLKSfcm2atssjRzsMcvLHYyHEcxyIAnwpmnwIYW0ma1cOGFgcKwj1bL7uyZ-LsZuIDn1fd9P0wH8IKoM0KtgrmzCJ+qoaWsnECsBJ9yLfC1kI+niO+qXfJllTWDUjmNb0q6eeJ+6YfazKqYFJIMi5CXcp8o6Wc56btYlXm9Ye90zFiEFbB3MFXDieOPCczIgA */
+/** @xstate-layout N4IgpgJg5mDOIC5QBUD2BXAxgCwAqoCcAXAQwBsACAS2XQDs5cySBPMAigWRJyoYDoAgughVUFJq36SWAYlhgiAZSKoADolBrUsKkTF1NIAB6IAtACYAjABZ+AZgCsADgsAGG1ccB2b27cAbDYANCAsiG78AfZWAJz2sTY23u6OLnEAvhmhaFh4hKSUNPSMzGwc3LwCwqLiMvwq6vKKMkbauvqohkgm5tZ2Tq4eXr7+QaHhCM7eUTHxicmpLlk5GDj4xOTUtAywMuxcPNh8YEIiYhJlsjBEMiokROjwPe16BkamCJb2FlHezo44j8LLFYlYfhNzFY-A4As43LE4f5vMkbM4ViBcusCltirt9hUjicGl0oNdFEpSW0dG8uh8+nF+M5nFYgqD3FY3NDIQhvLEZtFUjZHG4hl4MVj8psijtSqwDpVjgIlNh0AAzNVkMDk5SqjVa6kdd49T6WCyOfhubwBRG+EVw+xuRw82IuWbuewokX2TwWCVrKWFbYlPZlBVEgQAJTAajADx10djD0NtO6oFNFnN-D8-JZTrcFj8FhCYUQVnLsXdBbcCWL8Ni-ryGyDeLl5UOVVOAGF0AQCGA6EQKMgCDwANaXVj6AC22puPb7A6II-HMhnYBTnTTvS+FhtTLitmZjgSAKSPP6syBCxSTuW2UxAebuNloflhM70jKZCosCIOpkH8-2eLQaS3eld0LJkWQCE9y2cYUnQsHlogCKsQX8BFvEyB9JWfGUQwJDslVOQDf3-BRbjKMi-03Y10z6Jx+DBDCuWcAJolFHlHBsStBQLWJMP5P1cKfHECPxMMPxIr9WCAijFAAOTAYxl1HTAxzoukTUY34bU8HxbALHjnB5GwAj0n4BKElJG2xaVg0k99iOJGiFNufsADcxCeFcNK07cMySfg4gM2JphiFILHsHlPQtfjWKwkTVibcTHLbcNPwANVQMh0FnHUcry2cAogs00JY5xQViDkuW8HkzHsGJYXhPkUQsZlbNE1KHNbN920VYkivy7VKOGkqXjA+idzMRwLIcZwfVcEFzW5UsviaqwWqtfkbA66ZksfHqW1fIjBoESUAHk6AACVyiBmmXANrrusgIFKnSvhGBxorm60fk8KqeSsEEtprQElvNESHzoVAIDgIw8LSvqzojU4aguepWkmo1tIYr5ERC0VrD3djONM9bouY2DCwQjjeN+uzAxfQipJc6pzjqMoGlUDQcdTMqnC2wZ3CqtJM3sdiLy28zHFp8y2UZ7r7JO1nnPO9HOcnSZQNxwLzDihwXFF105eiqX1rMFJtpsJ1ywScL7CZ-D0v6zKZMpOgoA+-HGpZI2hjFs3JYCHlmT4qyeJFMVHGd5HTrZjWGj1TUN358DPr94XjdFU2JYtyZORFKtPUQn0rDj3qE-VtH+ETOMiB9mbJezwO8-N0P1pB8t0JrGq0QRSvVacgba4XftB2HdSJzXKgJt1gXM5bgOTfFjvYsCK95iSW85qHlmR-d1zv3IpvTU9SIItcKqkmmOWeRSZx0ME-x+RwlKVYPjLpKG3KRrP8wtsZgFmwvYAIHhXDtU7pMb4YMEgpHLCKfM94P7Mwkt-dmpwrq3XugAjarpLQIWtKyCye5bTA0dHYcGIN3DYRcHLfe6C3Y-wYHg2a7EFqQxWoCeqltbYDCRK4ZILgPABCyFkIAA */
 = createMachine({
   context: {
     PlayerState: { id: 'itunes_playing_state', value: '' },
@@ -36,7 +36,7 @@ export const player
       value: '',
       valueChoices: [],
       index: {},
-      currentName:''
+      currentName: '',
     },
     CurrentStreamTitle: {
       id: 'itunes_current_stream_title',
@@ -46,6 +46,7 @@ export const player
       id: 'itunes_current_stream_url',
       value: '',
     },
+    _HoldAction: {},
   },
   tsTypes: {} as import('./iTunes.typegen').Typegen0,
   schema: {
@@ -60,11 +61,16 @@ export const player
         | 'getCurrentTrackPlaytime'
         | 'getPlaylists'
         | 'getCurrentTrackAlbum'
-        | 'setVolume'
-        | 'toggleShuffle'
+        | 'setShuffle'
+        | 'setRepeat'
         | 'setStop'
         | 'setPlay'
         | 'setPlayPlaylist'
+        | 'setNextTrack'
+        | 'setPreviousTrack'
+        | 'setVolume'
+        | 'setTouchOnHold'
+        | 'guardVolume'
         | 'searchArtwork'
         | 'searchArtworkSuccess'
         | 'searchArtworkFailure'
@@ -97,7 +103,6 @@ export const player
       on: {getPlayStatus: {actions: 'GetPlayStatus'}},
     },
     Song: {on: {getSong: {actions: 'GetSong'}}},
-    Volume: {on: {getVolume: {actions: 'GetVolume'}}},
     Shuffle: {on: {getShuffle: {actions: 'GetShuffle'}}},
     Repeat: {on: {getRepeat: {actions: 'GetRepeat'}}},
     'Current Track Playtime': {on: {getCurrentTrackPlaytime: {actions: 'GetCurrentTrackPlaytime'}}},
@@ -105,8 +110,20 @@ export const player
       on: {
         getPlaylists: {actions: 'GetPlaylists'},
         setPlayPlaylist: {actions: 'SetPlayPlaylist'},
+        setNextTrack: {actions: 'SetNextTrack'},
+        setPreviousTrack: {actions: 'SetPreviousTrack'},
       },
     },
+    Volume: {
+      on: {
+        getVolume: {actions: 'GetVolume'},
+        setVolume: {
+          actions: 'SetVolume',
+          cond: 'guardVolume',
+        },
+      },
+    },
+    TouchOnHold: {on: {setTouchOnHold: {actions: 'SetTouchOnHold'}}},
   },
   id: 'TouchPortal iTunesPlayer Machine',
 }, {
@@ -142,7 +159,7 @@ export const player
       return context;
     }),
     GetVolume: assign((context) => {
-      context.Volume.value = iTunesObject.SoundVolume;
+      context.Volume.value = iTunesObject.SoundVolume.toString();
       return context;
     }),
     GetShuffle: assign((context) => {
@@ -176,41 +193,40 @@ export const player
       return context;
     }),
     GetPlayStatus: assign((context) => {
-
       context.PlayerState.value = iTunesObject.PlayerState === 1 ? "Playing" : "Stopped";
       return context;
     }),
     GetPlaylists: assign((context, event: any) => {
       const { TouchPortalClient } = event.payload;
-      if (iTunesObject.PlayerState !== ITPlayerStateStopped) {
-        const iTunesLibrary = getiTunesLibrary();
-        if (!iTunesLibrary) {
-          return context;
-        }
-        const playlists = iTunesLibrary.Playlists;
-        const playlistNames = [];
-        let updateNeeded = false;
-        for (let i = 1; i <= playlists.Count; i++) {
-          const playlist = playlists.Item[i];
-          const playlistName = playlist.Name.replace(/’/, "'");
-          const item = context.PlayLists.index[playlistName];
-          if (item === undefined) {
-            context.PlayLists.index[playlistName] = playlist;
-            context.PlayLists.currentName = playlistName;
-            updateNeeded = true;
-          }
-          playlistNames.push(playlistName);
-        }
-        context.PlayLists.value = playlistNames;
-
-        if (updateNeeded) {
-          TouchPortalClient.choiceUpdateSpecific(
-            context.PlayLists.id,
-            context.PlayLists.value,
-            'itunes_play_playlist'
-          );
-        }
+      // if (iTunesObject.PlayerState !== ITPlayerStateStopped) {
+      const iTunesLibrary = getiTunesLibrary();
+      if (!iTunesLibrary) {
+        return context;
       }
+      const playlists = iTunesLibrary.Playlists;
+      const playlistNames = [];
+      let updateNeeded = false;
+      for (let i = 1; i <= playlists.Count; i++) {
+        const playlist = playlists.Item[i];
+        const playlistName = playlist.Name.replace(/’/, "'");
+        const item = context.PlayLists.index[playlistName];
+        if (item === undefined) {
+          context.PlayLists.index[playlistName] = playlist;
+          context.PlayLists.currentName = playlistName;
+          updateNeeded = true;
+        }
+        playlistNames.push(playlistName);
+      }
+      context.PlayLists.value = playlistNames;
+
+      if (updateNeeded) {
+        TouchPortalClient.choiceUpdateSpecific(
+          context.PlayLists.id,
+          context.PlayLists.value,
+          'itunes_play_playlist'
+        );
+      }
+      // }
       return context;
     }),
 
@@ -245,6 +261,30 @@ export const player
       playlist.PlayFirstTrack();
       return context;
     }),
+    SetNextTrack: () => {
+      iTunesObject.NextTrack();
+    },
+    SetPreviousTrack: () => {
+      iTunesObject.BackTrack();
+    },
+    SetVolume: assign((context, event: any) => {
+      const currentVolume = iTunesObject.SoundVolume;
+      const desiredRange = Number(event.TPEvent.data[0].value);
+      if (context?._HoldAction[event.TPEvent.actionId]
+        || [ "down", "up" ].includes(event.TPEvent.type)) {
+        iTunesObject.SoundVolume = currentVolume + desiredRange;
+      }
+      return context;
+    }),
+    SetTouchOnHold: assign((context, event:any) => {
+      context._HoldAction[event.TPEvent.actionId] = event.hold ? true : false;
+      return context;
+    })
+  },
+  guards: {
+    guardVolume: (context) => {
+      return Number(context.Volume.value) >= 0 && Number(context.Volume.value) <= 100;
+    }
   }
 });
 

@@ -7,12 +7,16 @@ export interface Typegen0 {
     SetStop: 'setStop';
     SetPlay: 'setPlay';
     GetSong: 'getSong';
-    GetVolume: 'getVolume';
     GetShuffle: 'getShuffle';
     GetRepeat: 'getRepeat';
     GetCurrentTrackPlaytime: 'getCurrentTrackPlaytime';
     GetPlaylists: 'getPlaylists';
     SetPlayPlaylist: 'setPlayPlaylist';
+    SetNextTrack: 'setNextTrack';
+    SetPreviousTrack: 'setPreviousTrack';
+    GetVolume: 'getVolume';
+    SetVolume: 'setVolume';
+    SetTouchOnHold: 'setTouchOnHold';
   };
   internalEvents: {
     'xstate.init': { type: 'xstate.init' };
@@ -25,18 +29,21 @@ export interface Typegen0 {
     delays: never;
   };
   eventsCausingServices: {};
-  eventsCausingGuards: {};
+  eventsCausingGuards: {
+    guardVolume: 'setVolume';
+  };
   eventsCausingDelays: {};
   matchesStates:
     | 'Audio Play'
     | 'Audio Play.Play'
     | 'Audio Play.Stop'
     | 'Song'
-    | 'Volume'
     | 'Shuffle'
     | 'Repeat'
     | 'Current Track Playtime'
     | 'Playlist'
+    | 'Volume'
+    | 'TouchOnHold'
     | { 'Audio Play'?: 'Play' | 'Stop' };
   tags: never;
 }

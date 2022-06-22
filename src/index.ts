@@ -36,10 +36,11 @@ TPClient.on('connected', (data) => {
     const stateArray: any[] = [];
     const iTunesStates = { ...TPITunesState.app.state.context } as { [key: string]: any };
     Object.keys(iTunesStates).forEach((key) => {
-      if (iTunesStates[key].value != undefined) {
+      if (iTunesStates[key].value != undefined && key !== '_HoldAction') {
         stateArray.push(iTunesStates[key]);
       }
     });
+    console.log(JSON.stringify(TPITunesState.app.state.context, null, 2));
     TPClient.stateUpdateMany(stateArray);
   }, 100);
 
@@ -50,6 +51,9 @@ TPClient.on('connected', (data) => {
   });
 
 });
+
+/* This is a type definition for the variable `timedDutDown` which is used to store the interval timer. */
+let timedDutDown: ReturnType<typeof setInterval>;
 
 TPClient.on('Action', async (data, hold) => {
   const { actionId } = data;
@@ -68,6 +72,30 @@ TPClient.on('Action', async (data, hold) => {
         const repeatStatus = data.data[2].value;
         TPITunesState.app.send('setPlayPlaylist', { playlistName, shuffleStatus, repeatStatus });
       }
+      break;
+    case 'itunes_next_track':
+      TPITunesState.app.send('setNextTrack');
+      break;
+    case 'itunes_back_track':
+      TPITunesState.app.send('setPreviousTrack');
+      break;
+
+    case 'itunes_volume_adjust':
+      // eslint-disable-next-line no-case-declarations
+
+      TPITunesState.app.send('setTouchOnHold', { TPEvent: data, hold });
+      if (hold) {
+        timedDutDown = setInterval(() => {
+          TPITunesState.app.send('setVolume', { TPEvent: data, hold });
+        }, 100);
+      } else {
+        clearInterval(timedDutDown);
+      }
+
+      if (data.type === "down") {
+        TPITunesState.app.send('setVolume', { TPEvent: data, hold });
+      }
+
       break;
   }
 });

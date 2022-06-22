@@ -32,7 +32,7 @@ export interface _iTunes {
   /**
    * gets the sound volume
    */
-  SoundVolume: any; // Property => int SoundVolume () {get} {set}
+  SoundVolume: number; // Property => int SoundVolume () {get} {set}
 
   /**
    * A method that is called when the user clicks the play button.

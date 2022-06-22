@@ -32,5 +32,13 @@ export interface ITPITunesStateContext {
   CurrentTrackAlbumArtwork: TPortalKeyValue;
   CurrentStreamTitle: TPortalKeyValue;
   CurrentStreamURL: TPortalKeyValue;
+  _HoldAction: Record<string, unknown>;
+}
+
+export interface TPEvent {
+  data: any[],
+  pluginId: string,
+  actionId: string,
+  type:string,
 }
 
