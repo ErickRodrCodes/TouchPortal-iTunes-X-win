@@ -36,11 +36,10 @@ TPClient.on('connected', (data) => {
     const stateArray: any[] = [];
     const iTunesStates = { ...TPITunesState.app.state.context } as { [key: string]: any };
     Object.keys(iTunesStates).forEach((key) => {
-      if (iTunesStates[key].value != undefined && key !== '_HoldAction') {
+      if (iTunesStates[key].value != undefined) {
         stateArray.push(iTunesStates[key]);
       }
     });
-    console.log(JSON.stringify(TPITunesState.app.state.context, null, 2));
     TPClient.stateUpdateMany(stateArray);
   }, 100);
 
