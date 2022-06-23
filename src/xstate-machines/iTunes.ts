@@ -1,7 +1,7 @@
 import { Object as WinaxObject } from 'winax';
 import { assign, createMachine } from 'xstate';
 
-import { ITPlayerStateStopped, LIBRARY_TYPE, pluginId } from '../consts';
+import { ITPlayerStateStopped, ITPlaylistRepeatMode, LIBRARY_TYPE, pluginId } from '../consts';
 import { IITSource } from '../interfaces/IITSource';
 import { _iTunes } from '../interfaces/iTunes';
 import { ITPITunesStateContext } from './interfaces';
@@ -68,7 +68,7 @@ export const player
         | 'setNextTrack'
         | 'setPreviousTrack'
         | 'setVolume'
-        | 'setTouchOnHold'
+      | 'setTouchOnHold'
         | 'guardVolume'
         | 'searchArtwork'
         | 'searchArtworkSuccess'
@@ -102,8 +102,18 @@ export const player
       on: {getPlayStatus: {actions: 'GetPlayStatus'}},
     },
     Song: {on: {getSong: {actions: 'GetSong'}}},
-    Shuffle: {on: {getShuffle: {actions: 'GetShuffle'}}},
-    Repeat: {on: {getRepeat: {actions: 'GetRepeat'}}},
+    Shuffle: {
+      on: {
+        getShuffle: { actions: 'GetShuffle' },
+        setShuffle: { actions: 'SetShuffle'}
+      }
+    },
+    Repeat: {
+      on: {
+        getRepeat: { actions: 'GetRepeat' },
+        setRepeat: { actions: 'SetRepeat'}
+      }
+    },
     'Current Track Playtime': {on: {getCurrentTrackPlaytime: {actions: 'GetCurrentTrackPlaytime'}}},
     Playlist: {
       on: {
@@ -228,7 +238,6 @@ export const player
       // }
       return context;
     }),
-
     SetPlay: assign((context) => {
       context.PlayerState.value = "Playing";
       iTunesObject.Play();
@@ -278,7 +287,15 @@ export const player
     SetTouchOnHold: assign((context, event:any) => {
       context._HoldAction[event.TPEvent.actionId] = event.hold ? true : false;
       return context;
-    })
+    }),
+    SetRepeat: () => {
+      const currentRepeat = iTunesObject.CurrentPlaylist.SongRepeat;
+      iTunesObject.CurrentPlaylist.SongRepeat = (currentRepeat + 1) % 3 as ITPlaylistRepeatMode;
+    },
+    SetShuffle: () => {
+      const currentShuffle = iTunesObject.CurrentPlaylist.Shuffle;
+      iTunesObject.CurrentPlaylist.Shuffle = !currentShuffle;
+    }
   },
   guards: {
     guardVolume: (context) => {

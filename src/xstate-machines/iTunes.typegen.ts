@@ -8,7 +8,9 @@ export interface Typegen0 {
     SetPlay: 'setPlay';
     GetSong: 'getSong';
     GetShuffle: 'getShuffle';
+    SetShuffle: 'setShuffle';
     GetRepeat: 'getRepeat';
+    SetRepeat: 'setRepeat';
     GetCurrentTrackPlaytime: 'getCurrentTrackPlaytime';
     GetPlaylists: 'getPlaylists';
     SetPlayPlaylist: 'setPlayPlaylist';
