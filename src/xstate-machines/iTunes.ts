@@ -1,7 +1,8 @@
 import { Object as WinaxObject } from 'winax';
+import { Console } from 'winston/lib/winston/transports';
 import { assign, createMachine } from 'xstate';
 
-import { ITPlayerStateStopped, ITPlaylistRepeatMode, LIBRARY_TYPE, pluginId } from '../consts';
+import { defaultImageArtBase64, ITPlayerStateStopped, ITPlaylistRepeatMode, LIBRARY_TYPE, pluginId } from '../consts';
 import { IITSource } from '../interfaces/IITSource';
 import { _iTunes } from '../interfaces/iTunes';
 import { ITPITunesStateContext } from './interfaces';
@@ -11,7 +12,7 @@ const iTunesObject = new WinaxObject("iTunes.Application") as _iTunes;
 /* Creating a state machine. */
 
 export const player
-/** @xstate-layout N4IgpgJg5mDOIC5QBUD2BXAxgCwAqoCcAXAQwBsACAS2XQDs5cySBPMAigWRJyoYDoAgughVUFJq36SWAYlhgiAZSKoADolBrUsKkTF1NIAB6IATAEYAzPwCc92wA57AdltWADGYBsjgDQgLIgALGY2Xh4enrYunt7BAKzBAL7JAWhYeISklDT0jMxsHNy8AsKi4jL8KuryijJG2rr6qIZIJubWdg7OMe5evgFBCAkWHvwRUR4xcYmp6Rg4+MTk1LQMsDLsXDzYfGBCImIShbIwRDIqJETo8O1NegZGpggWtgn83m6+wVYWFglbN4rENzAkzBMzJFRh4LMFErYLPMQBkltlVnkNltirt9tVWlAzoolATGjpHq1nuYPI5+MEXN4Ei56U4LGZHAlQa8rC4XJDYVYEgkPC4AV9kaisitcusCqxtiU9gIlNh0AAzNVkMBE5SqjVasnNJ7tF5QmzstkJP6ORzBKJfLmI-leIUisxmd4JCWLKU5Nb5TaFBW4gQAJTAajA1x14cj10NFLaoFNXk+wVtwW8ANCVg5Li5Fm89n5FkcjMsWYS3m9mWWfsxcqKO1KBwAwugCAQwHQiBRkAQeABrE6sfQAW2153bne7RH7Q5k47ACZaSY6rwStKttg8XxhVnTDsCiFL3nGEUsUPZtq9aRRPrrGNlgflOJb0kKZCosCIOpkX5-O4tHJVcqQQKFxnpRlYhtUUqy5ZxaUmMxwTcQ9bwWWt0RlANsWbJUDn-b9fwUC5CiIn8V2NZMT1sCF4StHxvAg2J4QQ-5nWiWJd3hGs0Wlf0sSDN8CI-VgAJIxQADkwGMOcB0wQcqMpE1aI+bx4l3KsbTtHkuRcMxgk46ZuPiFI70lR8cKE198LxCjJIuLsADcxFuedFOUtcXlLIzCztZjPUPMIuWBPlJi42ZzMw-j62fPDFTxAA1VAyHQCcdRStKJy8sCzAZCYDLeDxMxiFwXQLFCjMcHwokzaEmT430n1w4S7IELL0u1UjOpy+4QOo9cUL5Nx3l8UYXB0-KCyiWk2USDwq0Mg85gsh9sMExtg3fSUAHk6AACVSiA6jnH19qOsgIFy1TXkcGxAR5Q8rEFYI2X8Y8N1zEss1hX4y1SO86FQCA4CMSyNobF8m0SsojkqQoxOGYCjRUmiEBeiEUMiLxYg9CxmWCLl4W8fhBReoVHCiJxHCaqzNuh7bRPKY4qhqDR+tR7zEF5Ynfn4DkXvKpxfGYlw6ch+K2thg4WYR1gbvRq0uUFc8IJhOEESRNasIEqGEpDA4SToKBFfXekC1KktBWFODxR12KWpsmHDeqPVNWXTnEzAi3PtLcIIJQ233U9CW9al2yZf4WMoyIM2Xl94YCadCJT3BQsxTDuLWsj13py7Hs+wU4dFyoPqUe927E7UiEL0ieJC2cLOna2kT7M-Yj48QJk6VtXNIjGA8yzYz77DVyIUPy2x0Ob6zW-ag5es9ivQNugqrAtQzeXdbT8z9zwkKhMYHHsfKzFnhmDZ287DuOruEGr15gXHjO-tzasHeaufGbbhh75Cv2h8cbAOAbTQGQA */
+/** @xstate-layout N4IgpgJg5mDOIC5QBUD2BXAxgCwAqoCcAXAQwBsACAS2XQDs5cySBPMAigWRJyoYDoAgughVUFJq36SWAYlhgiaKFDJgZiUAAdUsKkTF1NIAB6IATAEYArPwAM1gJwBmABzmALI6eXzrgDQgLIjWdo78AGzu1hHeER525tYeAOwAvmmBaFh4hKSUNPSMzGwc3LwCwqLiMvwAykSoWvKKyqrqJcY6egaoRkimFjb2Tm6e3o6+AUEhjhH81q4xKS52sa6+GVkYOPjE5NS0DLAy7Fw82HxgQiJiEiWyMEQyDSRE6PAD3fqGxmYIUTs9giSWslhsjiSEWcgWCCGcbn4KzBKQ8CPMzksjg8WxA2V2eQOhWOpzKFyu9T6UEeijqVK6uh+fT+iFitmcoVcHks3McKTW1lhiB5IKRKVR7imHic1lx+Ny+wKR2KrDO5UuAjq2HQADMdWoaUQtbr9WAGT1fgN-rEgZYIokHJjkklHEKEJZxfxHHZUbE3BtHN45TsFflDkUTiU1eTNdq9QaFEa46bzUz+qBrZN+B5XM5oeZ82ifW6s3Y7GinPFrJ5nClLMGcnsw8SVaVzhVrgAlMBaMBvQ3d3tvVO9dODAGucLVjxJDE8yx2HluyyuOvZ6yLazODweCJ7lKuBsExXhklRskd-iDvtEFpEa-Dr6M0csgHe-hc8U86vuFYpZcHh4CzVose57miK5HqGRLKpGqoXhq1wAMLoAQBBgHQRAUMgBA8AA1vcrAGAAtmAhooWhGFKLhmB4TIJFmk+FrMlarLStmbjbtu8SAtMcLmHYzjmPwXFJM45YOAJzhQU2MERqS7aIdIJRkFQsC3k8MiqepnzaM+loZqyq4iaB25rEJPL-jMCCOFy-BYlyQkcgiESypkeIhrJSryeeikUlpam3omMgBepI4GeOEQrCJQl2KurgJeCSRupOKT8OY3hCQWC4JJMMmEt5Z7wX5AihUFigAHJgCY1H4eFLGGROwnJBEPKuGEK6ASlC4iZCDiLOJHoZflJ4tnBbbqv5KmBXeuDoQAbmIHw4XVTFpq+UWWPYqRsuYc7QjC1kpBi2YJdi9qrlYKTSe58peaerbRpeABqqBkOgpGGq972kfVY7WglIlWFM8SLtiy6DR+3rOJCnj8gJEQjc2sEKZNAjfR9ZGJhjv1rS+rEAl4XrcqkqQrkkM7Lt+9hLL+m4+vWt2eQVD3jU9SnygA8nQAASb0QHeXO8-zf0bfyp2SZOvjHVZcJ2ide5gquPpJCsN3bI2LNjajMbXHSdBQBQgjEAA7oQeH8AoJAEDgxtEGbBB4bIEB9NcfDzageFu3QHte3U7CLZgYAAOKKHbDt4aLBPYq46VcrudoxHulhuntB7pbW0LxJYtY5kjclFRNuuUgbRum+blt9jb2Dh+bsjsAQhD8FozBEDqhDEfw7ue2A-sEIHIdh+XjtR41MdxzurWuWBKfWRiqTpVd8SuK5V3pEzmujSjvlo3rVJl-bFdW9XteOwAkhABo6ootvD5HeMRf8fi2A4ZbghuKxonxFgZVt9qJMrbwYQMjuToKgCAcBjB3S1tvYqu8bjVEIiwZSrBR7jlrECFqkw1jxEmOCDwbotzCT5AWaU5YUjOkZhrY8yMfJwOLlUO4tQGhNDQf8cUhDxLZmOmyFwkItzqw8pvWhhd2YUkYTUToD8Grji3G6NE8x1h+ASBQ8wqj86FUeghCk+soBsMQKkZcG4gKAglN6Fe3g3LUOgpotm2jYwmjUPohAhi56xA-Aua6U9HLGI0azHWl4HxEGca4uWcxnAmUSjmFIe48yIw3jQguWiSrIVQuhTC2EaIEXolQXGelmL-QMbLIYnh0q7isDufkOZHB+O1jvYuZVnHWDSruVcrkOSpBiAiZcPp5gLhsDOMI+Y4q1NgUXF6b1MbOJiXHcsW44obBzCCCGLgkQuGclFdYQYEk2P8fUy8Qs+ZkAgCE4p7o6y2BiIspYiRkjuFGXQ8ZSldEHwjpXa2t9D4j2kYUhAdyRKCTtOslyro55+AiWWFYUQbC5hiQ80R9i96l1PhbY+OAkKoGIi3RQkBnG+CSEiKIK98UzjrOYVOajhJWFCN6FY0R17WPunU+hl4XkovedXAAomhQgeK9q2BiQlVqe1SW+FTtuLaWJIRYnGDLeFyT4Fsrvhyz5EcL5OJ+a+Y64qBILHBd6QZ0otzyrsSkkuhsUUhO-ggKwgYM4CgLFxa6JqAmIWcRiZcscwaBh9b6wM8SMhAA */
 = createMachine({
   context: {
     PlayerState: { id: 'itunes_playing_state', value: '' },
@@ -21,7 +22,7 @@ export const player
     CurrentTrackArtist: { id: 'itunes_current_track_artist', value: '' },
     CurrentTrackAlbumArtwork: {
       id: 'itunes_current_track_album_artwork',
-      value: '',
+      value: defaultImageArtBase64,
     },
     CurrentTrackPlayedTime: { id: 'itunes_current_track_play_time', value: '' },
     CurrentTrackRemainingTime: {
@@ -46,6 +47,8 @@ export const player
       value: '',
     },
     _HoldAction: {},
+    canSearchImage: true,
+    lastSearchSong: '',
   },
   tsTypes: {} as import('./iTunes.typegen').Typegen0,
   schema: {
@@ -62,19 +65,21 @@ export const player
         | 'getCurrentTrackAlbum'
         | 'setShuffle'
         | 'setRepeat'
-        | 'setStop'
-        | 'setPlay'
+        | 'setTogglePlay'
         | 'setPlayPlaylist'
         | 'setNextTrack'
         | 'setPreviousTrack'
         | 'setVolume'
-      | 'setTouchOnHold'
+        | 'setTouchOnHold'
         | 'guardVolume'
+        | 'guardSearchArtwork'
         | 'searchArtwork'
+        | 'searchArtworkStart'
         | 'searchArtworkSuccess'
         | 'searchArtworkFailure'
         | 'onError'
-        | 'onDone';
+        | 'onDone'
+        | 'fetchArtwork';
     },
   },
   type: 'parallel',
@@ -84,16 +89,16 @@ export const player
       states: {
         Play: {
           on: {
-            setStop: {
-              actions: 'SetStop',
+            setTogglePlay: {
+              actions: 'SetTogglePlay',
               target: 'Stop',
             },
           },
         },
         Stop: {
           on: {
-            setPlay: {
-              actions: [ 'SetPlay' ],
+            setTogglePlay: {
+              actions: 'SetTogglePlay',
               target: 'Play',
             },
           },
@@ -104,15 +109,15 @@ export const player
     Song: {on: {getSong: {actions: 'GetSong'}}},
     Shuffle: {
       on: {
-        getShuffle: { actions: 'GetShuffle' },
-        setShuffle: { actions: 'SetShuffle'}
-      }
+        getShuffle: {actions: 'GetShuffle'},
+        setShuffle: {actions: 'SetShuffle'},
+      },
     },
     Repeat: {
       on: {
-        getRepeat: { actions: 'GetRepeat' },
-        setRepeat: { actions: 'SetRepeat'}
-      }
+        getRepeat: {actions: 'GetRepeat'},
+        setRepeat: {actions: 'SetRepeat'},
+      },
     },
     'Current Track Playtime': {on: {getCurrentTrackPlaytime: {actions: 'GetCurrentTrackPlaytime'}}},
     Playlist: {
@@ -133,6 +138,33 @@ export const player
       },
     },
     TouchOnHold: {on: {setTouchOnHold: {actions: 'SetTouchOnHold'}}},
+    'Song Artwork': {
+      initial: 'searchArtworkIdle',
+      states: {
+        searchArtwork: {
+          invoke: {
+            src: 'serviceGetArtwork',
+            id: 'invokeServiceGetArtwork',
+            onDone: [
+              {target: 'searchCompleted'},
+            ],
+            onError: [
+              {target: 'searchError'},
+            ],
+          },
+        },
+        searchCompleted: {type: 'final'},
+        searchError: {type: 'final'},
+        searchArtworkIdle: {
+          on: {
+            fetchArtwork: {
+              cond: 'guardSearchArtwork',
+              target: 'searchArtwork',
+            },
+          },
+        },
+      },
+    },
   },
   id: 'TouchPortal iTunesPlayer Machine',
 }, {
@@ -224,9 +256,17 @@ export const player
           context.PlayLists.currentName = playlistName;
           updateNeeded = true;
         }
-        playlistNames.push(playlistName);
+        playlistNames[playlist.Index] = playlistName;
       }
+
       context.PlayLists.value = playlistNames;
+      if (context.PlayerState.value === 'Playing') {
+        if (iTunesObject.CurrentPlaylist.Kind === 2) {
+          context.CurrentTrackAlbum.value = iTunesObject.CurrentTrack.Album;
+        } else {
+          context.CurrentTrackAlbum.value = iTunesObject.CurrentPlaylist.Name;
+        }
+      }
 
       if (updateNeeded) {
         TouchPortalClient.choiceUpdateSpecific(
@@ -238,16 +278,19 @@ export const player
       // }
       return context;
     }),
-    SetPlay: assign((context) => {
-      context.PlayerState.value = "Playing";
-      iTunesObject.Play();
-      return context;
-    }),
-    SetStop: assign((context) => {
-      context.PlayerState.value = "Stopped";
+    SetTogglePlay: assign((context) => {
+      const newState = context.PlayerState.value === 'Playing' ? 'Stopped' : 'Playing';
+      context.PlayerState.value = newState;
+      if (newState === 'Playing') {
+        console.log(iTunesObject.PlayerState);
+        iTunesObject.Play();
+        // context.PlayLists.
+        return context;
+      }
       iTunesObject.Stop();
       return context;
     }),
+
     SetPlayPlaylist: assign((context, event:any) => {
       const { playlistName, shuffleStatus, repeatStatus } = event;
       const playlist = context.PlayLists.index[playlistName];
@@ -295,11 +338,26 @@ export const player
     SetShuffle: () => {
       const currentShuffle = iTunesObject.CurrentPlaylist.Shuffle;
       iTunesObject.CurrentPlaylist.Shuffle = !currentShuffle;
-    }
+    },
   },
   guards: {
     guardVolume: (context) => {
       return Number(context.Volume.value) >= 0 && Number(context.Volume.value) <= 100;
+    },
+    guardSearchArtwork: (context) => {
+      const songName = context.CurrentTrackName.value;
+      const artist = context.CurrentTrackArtist.value;
+      // if (context.lastSearchSong !== `${songName} - ${artist}`) {
+      //   context.canSearchImage = true
+      //   r
+      // }
+      return context.canSearchImage === true && context.lastSearchSong !== `${songName} - ${artist}`;
+    }
+  },
+  services: {
+    serviceGetArtwork: async (context, event): Promise<any> => {
+      console.log({context, event});
+      return true;
     }
   }
 });

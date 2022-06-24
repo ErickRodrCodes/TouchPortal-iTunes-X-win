@@ -4,8 +4,7 @@ export interface Typegen0 {
   '@@xstate/typegen': true;
   eventsCausingActions: {
     GetPlayStatus: 'getPlayStatus';
-    SetStop: 'setStop';
-    SetPlay: 'setPlay';
+    SetTogglePlay: 'setTogglePlay';
     GetSong: 'getSong';
     GetShuffle: 'getShuffle';
     SetShuffle: 'setShuffle';
@@ -22,17 +21,31 @@ export interface Typegen0 {
   };
   internalEvents: {
     'xstate.init': { type: 'xstate.init' };
+    'done.invoke.invokeServiceGetArtwork': {
+      type: 'done.invoke.invokeServiceGetArtwork';
+      data: unknown;
+      __tip: 'See the XState TS docs to learn how to strongly type this.';
+    };
+    'error.platform.invokeServiceGetArtwork': {
+      type: 'error.platform.invokeServiceGetArtwork';
+      data: unknown;
+    };
   };
-  invokeSrcNameMap: {};
+  invokeSrcNameMap: {
+    serviceGetArtwork: 'done.invoke.invokeServiceGetArtwork';
+  };
   missingImplementations: {
     actions: never;
     services: never;
     guards: never;
     delays: never;
   };
-  eventsCausingServices: {};
+  eventsCausingServices: {
+    serviceGetArtwork: 'fetchArtwork';
+  };
   eventsCausingGuards: {
     guardVolume: 'setVolume';
+    guardSearchArtwork: 'fetchArtwork';
   };
   eventsCausingDelays: {};
   matchesStates:
@@ -46,6 +59,18 @@ export interface Typegen0 {
     | 'Playlist'
     | 'Volume'
     | 'TouchOnHold'
-    | { 'Audio Play'?: 'Play' | 'Stop' };
+    | 'Song Artwork'
+    | 'Song Artwork.searchArtwork'
+    | 'Song Artwork.searchCompleted'
+    | 'Song Artwork.searchError'
+    | 'Song Artwork.searchArtworkIdle'
+    | {
+        'Audio Play'?: 'Play' | 'Stop';
+        'Song Artwork'?:
+          | 'searchArtwork'
+          | 'searchCompleted'
+          | 'searchError'
+          | 'searchArtworkIdle';
+      };
   tags: never;
 }

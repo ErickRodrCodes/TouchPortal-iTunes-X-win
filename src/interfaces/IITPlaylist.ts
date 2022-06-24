@@ -78,5 +78,10 @@ export interface IITPlaylist {
    * Returns a collection containing the tracks in this playlist.
    */
   Tracks: IITTrackCollection;
+
+  /* The name of the Playlist. It might not be active if there is nothing playing. */
+  Name: string;
+
+  Index: any;
 }
 

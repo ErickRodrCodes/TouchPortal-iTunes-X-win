@@ -58,11 +58,7 @@ TPClient.on('Action', async (data, hold) => {
   const { actionId } = data;
   switch (actionId) {
     case 'itunes_toggle_play_action':
-      if (TPITunesState.app.state.context.PlayerState.value === 'Playing') {
-        TPITunesState.app.send('setStop');
-      } else {
-        TPITunesState.app.send('setPlay');
-      }
+      TPITunesState.app.send('setTogglePlay');
       break;
     case 'itunes_play_playlist':
       if (data.data.length > 0) {

@@ -33,6 +33,8 @@ export interface ITPITunesStateContext {
   CurrentStreamTitle: TPortalKeyValue;
   CurrentStreamURL: TPortalKeyValue;
   _HoldAction: Record<string, unknown>;
+  canSearchImage: boolean;
+  lastSearchSong: string;
 }
 
 export interface TPEvent {

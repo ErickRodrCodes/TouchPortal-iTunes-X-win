@@ -105,7 +105,6 @@ export type iTunesTypes =
   "itunes_volume_adjust" |
   "itunes_volume_up" |
   "itunes_volume_down" |
-  "itunes_play_playlist" |
   "itunes_current_stream_url" |
   "itunes_current_stream_title";
 
