@@ -35,6 +35,7 @@ export interface ITPITunesStateContext {
   _HoldAction: Record<string, unknown>;
   canSearchImage: boolean;
   lastSearchSong: string;
+  TouchPortalSettings: Record<string, unknown>;
 }
 
 export interface TPEvent {

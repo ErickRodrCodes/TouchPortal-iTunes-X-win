@@ -9,13 +9,22 @@ const updateUrl = '';
 const TPClient = new Client({ pluginId, updateUrl });
 TPClient.connect({ pluginId });
 const TPITunesState = {app: interpret(player)};
+// first, create a recurrent send of actions to xstate so this concurrent
+// machine can react to the actions
+TPITunesState.app.start();
+
+TPClient.on('Settings', (message:any[]) => {
+  const pluginSettings:Record<any, any> = {};
+  message.forEach(setting => {
+    const key = Object.keys(setting)[0];
+    pluginSettings[key] = setting[key];
+  });
+  TPITunesState.app.send('setSettings', {payload: pluginSettings});
+});
 
 // Do this ONLY when you are connected. This is the only time you should call this function.
 TPClient.on('connected', (data) => {
   console.log(`${pluginId} connected`);
-  // first, create a recurrent send of actions to xstate so this concurrent
-  // machine can react to the actions
-  TPITunesState.app.start();
   const setTransitions = setInterval(() => {
     peekAndDispatchMessages();
     TPITunesState.app.send([
@@ -25,7 +34,9 @@ TPClient.on('connected', (data) => {
       'getRepeat',
       'getCurrentTrackPlaytime',
       'getPlayStatus',
-      'getCurrentTrackAlbum'
+      'getCurrentTrackAlbum',
+      'getArtwork',
+      'actionSearch'
     ]);
     TPITunesState.app.send('getPlaylists', {payload: {TouchPortalClient: TPClient}});
   }, 100);
