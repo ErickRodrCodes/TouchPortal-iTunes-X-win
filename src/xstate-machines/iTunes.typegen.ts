@@ -21,31 +21,17 @@ export interface Typegen0 {
   };
   internalEvents: {
     'xstate.init': { type: 'xstate.init' };
-    'done.invoke.invokeServiceGetArtwork': {
-      type: 'done.invoke.invokeServiceGetArtwork';
-      data: unknown;
-      __tip: 'See the XState TS docs to learn how to strongly type this.';
-    };
-    'error.platform.invokeServiceGetArtwork': {
-      type: 'error.platform.invokeServiceGetArtwork';
-      data: unknown;
-    };
   };
-  invokeSrcNameMap: {
-    serviceGetArtwork: 'done.invoke.invokeServiceGetArtwork';
-  };
+  invokeSrcNameMap: {};
   missingImplementations: {
     actions: never;
     services: never;
     guards: never;
     delays: never;
   };
-  eventsCausingServices: {
-    serviceGetArtwork: 'fetchArtwork';
-  };
+  eventsCausingServices: {};
   eventsCausingGuards: {
     guardVolume: 'setVolume';
-    guardSearchArtwork: 'fetchArtwork';
   };
   eventsCausingDelays: {};
   matchesStates:
@@ -59,18 +45,6 @@ export interface Typegen0 {
     | 'Playlist'
     | 'Volume'
     | 'TouchOnHold'
-    | 'Song Artwork'
-    | 'Song Artwork.searchArtwork'
-    | 'Song Artwork.searchCompleted'
-    | 'Song Artwork.searchError'
-    | 'Song Artwork.searchArtworkIdle'
-    | {
-        'Audio Play'?: 'Play' | 'Stop';
-        'Song Artwork'?:
-          | 'searchArtwork'
-          | 'searchCompleted'
-          | 'searchError'
-          | 'searchArtworkIdle';
-      };
+    | { 'Audio Play'?: 'Play' | 'Stop' };
   tags: never;
 }

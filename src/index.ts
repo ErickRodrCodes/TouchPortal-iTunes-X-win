@@ -30,7 +30,7 @@ TPClient.on('connected', (data) => {
     TPITunesState.app.send('getPlaylists', {payload: {TouchPortalClient: TPClient}});
   }, 100);
 
-  // spit out the state machine context everyy 100ms so we get consistent data from the state machine
+  // spit out the state machine context everyy 500ms so we get consistent data from the state machine
   // instead reacting to each transition, which will be a lot of data for the ui to handle
   const updateInterval = setInterval(() => {
     const stateArray: any[] = [];
@@ -76,6 +76,8 @@ TPClient.on('Action', async (data, hold) => {
       break;
 
     case 'itunes_volume_adjust':
+      // eslint-disable-next-line no-case-declarations
+
       TPITunesState.app.send('setTouchOnHold', { TPEvent: data, hold });
       if (hold) {
         timedDutDown = setInterval(() => {
@@ -84,16 +86,11 @@ TPClient.on('Action', async (data, hold) => {
       } else {
         clearInterval(timedDutDown);
       }
+
       if (data.type === "down") {
         TPITunesState.app.send('setVolume', { TPEvent: data, hold });
       }
 
-      break;
-    case 'itunes_shuffle_action':
-      TPITunesState.app.send('setShuffle');
-      break;
-    case 'itunes_repeat_action':
-      TPITunesState.app.send('setRepeat');
       break;
   }
 });

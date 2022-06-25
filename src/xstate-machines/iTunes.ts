@@ -72,14 +72,6 @@ export const player
         | 'setVolume'
         | 'setTouchOnHold'
         | 'guardVolume'
-        | 'guardSearchArtwork'
-        | 'searchArtwork'
-        | 'searchArtworkStart'
-        | 'searchArtworkSuccess'
-        | 'searchArtworkFailure'
-        | 'onError'
-        | 'onDone'
-        | 'fetchArtwork';
     },
   },
   type: 'parallel',
@@ -138,33 +130,6 @@ export const player
       },
     },
     TouchOnHold: {on: {setTouchOnHold: {actions: 'SetTouchOnHold'}}},
-    'Song Artwork': {
-      initial: 'searchArtworkIdle',
-      states: {
-        searchArtwork: {
-          invoke: {
-            src: 'serviceGetArtwork',
-            id: 'invokeServiceGetArtwork',
-            onDone: [
-              {target: 'searchCompleted'},
-            ],
-            onError: [
-              {target: 'searchError'},
-            ],
-          },
-        },
-        searchCompleted: {type: 'final'},
-        searchError: {type: 'final'},
-        searchArtworkIdle: {
-          on: {
-            fetchArtwork: {
-              cond: 'guardSearchArtwork',
-              target: 'searchArtwork',
-            },
-          },
-        },
-      },
-    },
   },
   id: 'TouchPortal iTunesPlayer Machine',
 }, {
@@ -344,22 +309,8 @@ export const player
     guardVolume: (context) => {
       return Number(context.Volume.value) >= 0 && Number(context.Volume.value) <= 100;
     },
-    guardSearchArtwork: (context) => {
-      const songName = context.CurrentTrackName.value;
-      const artist = context.CurrentTrackArtist.value;
-      // if (context.lastSearchSong !== `${songName} - ${artist}`) {
-      //   context.canSearchImage = true
-      //   r
-      // }
-      return context.canSearchImage === true && context.lastSearchSong !== `${songName} - ${artist}`;
-    }
   },
-  services: {
-    serviceGetArtwork: async (context, event): Promise<any> => {
-      console.log({context, event});
-      return true;
-    }
-  }
+  services: {}
 });
 
 const getiTunesLibrary = (): IITSource | undefined  => {
