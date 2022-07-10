@@ -1,4 +1,4 @@
-import { ITRatingKind } from "../iTunes/consts";
+import { ITRatingKind } from "../consts";
 import { IITPlaylistCollection } from "./IITPlaylistCollection";
 
 export interface IITURLTrack {

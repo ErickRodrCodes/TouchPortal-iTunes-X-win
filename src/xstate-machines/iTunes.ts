@@ -1,7 +1,7 @@
+/* eslint-disable no-console */
 import { searchSong } from '@tbogard/itunes-search';
 import axios from 'axios';
 import fs from 'fs';
-import fetch from 'node-fetch';
 import path from 'path';
 import { Object as WinaxObject } from 'winax';
 import { assign, createMachine } from 'xstate';
@@ -376,11 +376,18 @@ export const player
     }
   },
   services: {
-    GetArtwork: (context) => {
-      const songName = context.CurrentTrackName.value;
-      const artist = context.CurrentTrackArtist.value;
-      const lastSearchSong = `${songName} - ${artist}`;
-      return getSongInfo(lastSearchSong);
+    GetArtwork: () => {
+      if (iTunesObject.CurrentStreamTitle) {
+        const streamTitle = iTunesObject.CurrentStreamTitle.split(' - ');
+        return getSongInfo(`${streamTitle[1]} - ${streamTitle[0]}`);
+      }
+      const songName = iTunesObject?.CurrentTrack?.Name;
+      const artist = iTunesObject?.CurrentTrack?.Artist;
+      if (songName && artist) {
+        const lastSearchSong = `${songName} - ${artist}`;
+        return getSongInfo(lastSearchSong);
+      }
+      return getSongInfo(null);
     },
   }
 });
@@ -400,11 +407,15 @@ const getiTunesLibrary = (): IITSource | undefined  => {
   return;
 };
 
-const getSongInfo = async (song: string): Promise<string | null> => {
+const getSongInfo = async (song: string|null): Promise<string | null> => {
   // we can inquire right away if the media we are playing online media
+  if (song === null) {
+    return defaultImageArtBase64;
+  }
   if (iTunesObject.CurrentTrack.Kind === ITTrackKindURL) {
     try {
-      const result = await searchSong(song, { limit: 1 });
+      console.log(`searchig artwork for ${song}`);
+      const result = await searchSong(song, { limit: 1, timeout: 5000});
       if (result.resultCount > 0) {
         const url = result.results[0].artworkUrl100.replace("100x100", "500x500");
         const response = await axios.get(url, {responseType:'arraybuffer'});

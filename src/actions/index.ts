@@ -1,21 +1,22 @@
+/* eslint-disable no-console */
 import { searchSong } from "@tbogard/itunes-search";
 import { ReturnType } from '@tbogard/itunes-search/dist/typings/types';
 
-import { ITPlayerState, ITPlayerStateStopped, ITSourceKind } from "../consts";
+import { ITPlayerState, ITPlayerStateStopped, ITPlaylistRepeatMode, ITSourceKind } from "../consts";
 import { IITPlaylist } from "../interfaces/IITPlaylist";
 import { IITTrack } from "../interfaces/IITTrack";
 import { IITURLTrack } from "../interfaces/IITURLTrack";
 import { iTunesObject } from "../iTunes/object";
 
-const getCurrentPlaylist = (): IITPlaylist => {
+export const getCurrentPlaylist = (): IITPlaylist => {
   return iTunesObject.CurrentPlaylist;
 };
 
-const getCurrentTrack = (): IITTrack | IITURLTrack => {
+export const getCurrentTrack = (): IITTrack | IITURLTrack => {
   return iTunesObject.CurrentTrack;
 };
 
-const getCurrentTrackType = (): ITSourceKind => {
+export const getCurrentTrackType = (): ITSourceKind => {
   return getCurrentTrack().Kind;
 };
 
@@ -48,7 +49,7 @@ export const shuffle = (): void => {
 
 export const repeat = (): void => {
   const currentPlaylist = getCurrentPlaylist();
-  currentPlaylist.SongRepeat = (currentPlaylist.SongRepeat + 1) % 3;
+  currentPlaylist.SongRepeat = (currentPlaylist.SongRepeat + 1) % 3 as ITPlaylistRepeatMode;
 };
 
 export const volumeUp = (): void => {

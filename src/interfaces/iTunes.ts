@@ -1,6 +1,5 @@
 import { ITPlayerState } from '../consts';
 import { IITPlaylist } from './IITPlaylist';
-import { IITSource } from './IITSource';
 import { IITSourceCollection } from './IITSourceCollection';
 import { IITTrack } from './IITTrack';
 

@@ -1,4 +1,4 @@
-import { ITSourceKind } from '../iTunes/consts';
+import { ITSourceKind } from '../consts';
 import { IITPlaylistCollection } from "./IITPlaylistCollection";
 
 /**

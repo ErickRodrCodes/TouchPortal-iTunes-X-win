@@ -1,5 +1,5 @@
 // Plugin ID
-export const pluginId = "TPiTunes";
+export const pluginId = "TPiTunesX";
 
 /**
  * ITSourceKind

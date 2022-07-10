@@ -2,7 +2,7 @@ import {
   E_FAIL,
   E_POINTER,
   S_OK
-} from "../iTunes/consts";
+} from "../consts";
 import { IITTrack } from "./IITTrack";
 
 /**

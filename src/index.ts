@@ -1,10 +1,11 @@
+/* eslint-disable no-console */
 import { Client } from 'touchportal-api';
 import { peekAndDispatchMessages } from 'winax';
 import { interpret } from 'xstate';
 
+import { pluginId } from './consts';
 import { player } from './xstate-machines/iTunes';
 
-const pluginId = "TPiTunes";
 const updateUrl = '';
 const TPClient = new Client({ pluginId, updateUrl });
 TPClient.connect({ pluginId });
@@ -23,7 +24,7 @@ TPClient.on('Settings', (message:any[]) => {
 });
 
 // Do this ONLY when you are connected. This is the only time you should call this function.
-TPClient.on('connected', (data) => {
+TPClient.on('connected', () => {
   console.log(`${pluginId} connected`);
   const setTransitions = setInterval(() => {
     peekAndDispatchMessages();
@@ -87,8 +88,6 @@ TPClient.on('Action', async (data, hold) => {
       break;
 
     case 'itunes_volume_adjust':
-      // eslint-disable-next-line no-case-declarations
-
       TPITunesState.app.send('setTouchOnHold', { TPEvent: data, hold });
       if (hold) {
         timedDutDown = setInterval(() => {

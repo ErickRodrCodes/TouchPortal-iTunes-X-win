@@ -120,3 +120,4 @@ dist
 build/
 .vscode/
 output/
+installers/**/*.tpp

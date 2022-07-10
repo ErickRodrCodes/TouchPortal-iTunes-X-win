@@ -1,4 +1,6 @@
 src/typings/**/*.ts
 webpack.config.js
 .eslintrc.js
+iTunes.typegen.ts
+native-addon-loader.js
 
