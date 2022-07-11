@@ -14,7 +14,7 @@
         {
             "id": "TPiTunesX",
             "name": "iTunes",
-            "imagepath": "%TP_PLUGIN_FOLDER%TPiTunesX/TPiTunesX-96x96.png",
+            "imagepath": "%TP_PLUGIN_FOLDER%TPiTunesX/TPiTunesX-24x24.png",
             "actions": [
                 {
                     "id": "itunes_toggle_play_action",

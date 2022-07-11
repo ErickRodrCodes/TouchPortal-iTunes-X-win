@@ -2,6 +2,7 @@
 import { searchSong } from '@tbogard/itunes-search';
 import axios from 'axios';
 import fs from 'fs';
+import jetpack from 'fs-jetpack';
 import path from 'path';
 import { Object as WinaxObject } from 'winax';
 import { assign, createMachine } from 'xstate';
@@ -176,7 +177,7 @@ export const player
   id: 'TouchPortal iTunesPlayer Machine',
 }, {
   actions: {
-    GetSong: assign((context) => {
+    GetSong: assign((context: any) => {
       let songName = '';
       if (iTunesObject.PlayerState !== ITPlayerStateStopped) {
         if (iTunesObject.CurrentStreamTitle) {
@@ -206,17 +207,17 @@ export const player
       }
       return context;
     }),
-    GetVolume: assign((context) => {
+    GetVolume: assign((context: any) => {
       context.Volume.value = iTunesObject.SoundVolume.toString();
       return context;
     }),
-    GetShuffle: assign((context) => {
+    GetShuffle: assign((context: any) => {
       if (iTunesObject.PlayerState !== ITPlayerStateStopped) {
         context.Shuffle.value = iTunesObject.CurrentPlaylist.Shuffle ? "On" : "Off";
       }
       return context;
     }),
-    GetRepeat: assign((context) => {
+    GetRepeat: assign((context: any) => {
       const repeatMode = [ 'Off',
         'Song',
         'Playlist' ];
@@ -225,7 +226,7 @@ export const player
       }
       return context;
     }),
-    GetCurrentTrackPlaytime: assign((context) => {
+    GetCurrentTrackPlaytime: assign((context: any) => {
       if (iTunesObject.PlayerState !== ITPlayerStateStopped) {
         if (iTunesObject.CurrentStreamTitle) {
           context.CurrentTrackPlayedTime.value = "∞";
@@ -240,11 +241,11 @@ export const player
       }
       return context;
     }),
-    GetPlayStatus: assign((context) => {
+    GetPlayStatus: assign((context: any) => {
       context.PlayerState.value = iTunesObject.PlayerState === 1 ? "Playing" : "Stopped";
       return context;
     }),
-    GetPlaylists: assign((context, event: any) => {
+    GetPlaylists: assign((context: any, event: any) => {
       const { TouchPortalClient } = event.payload;
       const iTunesLibrary = getiTunesLibrary();
       if (!iTunesLibrary) {
@@ -284,7 +285,7 @@ export const player
       // }
       return context;
     }),
-    SetTogglePlay: assign((context) => {
+    SetTogglePlay: assign((context: any) => {
       const newState = context.PlayerState.value === 'Playing' ? 'Stopped' : 'Playing';
       context.PlayerState.value = newState;
       if (newState === 'Playing') {
@@ -297,7 +298,7 @@ export const player
       return context;
     }),
 
-    SetPlayPlaylist: assign((context, event:any) => {
+    SetPlayPlaylist: assign((context: any, event:any) => {
       const { playlistName, shuffleStatus, repeatStatus } = event;
       const playlist = context.PlayLists.index[playlistName];
       // TODO: check if playlist is valid
@@ -324,7 +325,7 @@ export const player
     SetPreviousTrack: () => {
       iTunesObject.BackTrack();
     },
-    SetVolume: assign((context, event: any) => {
+    SetVolume: assign((context: any, event: any) => {
       const currentVolume = iTunesObject.SoundVolume;
       const desiredRange = Number(event.TPEvent.data[0].value);
       if (context?._HoldAction[event.TPEvent.actionId]
@@ -333,7 +334,7 @@ export const player
       }
       return context;
     }),
-    SetTouchOnHold: assign((context, event:any) => {
+    SetTouchOnHold: assign((context: any, event:any) => {
       context._HoldAction[event.TPEvent.actionId] = event.hold ? true : false;
       return context;
     }),
@@ -345,28 +346,28 @@ export const player
       const currentShuffle = iTunesObject.CurrentPlaylist.Shuffle;
       iTunesObject.CurrentPlaylist.Shuffle = !currentShuffle;
     },
-    SetSettings: assign((context, event: any) => {
+    SetSettings: assign((context: any, event: any) => {
       const { payload } = event;
       context.TouchPortalSettings = {...payload};
       return context;
     }),
-    ApplyArtwork: assign((context, event) => {
+    ApplyArtwork: assign((context:any, event:any) => {
       const songName = context.CurrentTrackName.value;
       const artist = context.CurrentTrackArtist.value;
       context.lastSearchSong = `${songName} - ${artist}`;
       context.CurrentTrackAlbumArtwork.value = event.data as string;
       return context;
     }),
-    LoadingArtwork: assign((context) => {
+    LoadingArtwork: assign((context: any) => {
       context.CurrentTrackAlbumArtwork.value = loadingImageArtBase64;
       return context;
     })
   },
   guards: {
-    guardVolume: (context) => {
+    guardVolume: (context: any) => {
       return Number(context.Volume.value) >= 0 && Number(context.Volume.value) <= 100;
     },
-    guardGetArtwork: (context) => {
+    guardGetArtwork: (context: any) => {
       const songName = context.CurrentTrackName.value;
       const artist = context.CurrentTrackArtist.value;
       if (context.PlayerState.value === "Stopped") {
@@ -410,30 +411,43 @@ const getiTunesLibrary = (): IITSource | undefined  => {
 const getSongInfo = async (song: string|null): Promise<string | null> => {
   // we can inquire right away if the media we are playing online media
   if (song === null) {
+    console.log('Song was passed as null string, returning default artwork image.');
     return defaultImageArtBase64;
   }
   if (iTunesObject.CurrentTrack.Kind === ITTrackKindURL) {
     try {
-      console.log(`searchig artwork for ${song}`);
+      console.log(`Searching artwork for track "${song}"`);
       const result = await searchSong(song, { limit: 1, timeout: 5000});
       if (result.resultCount > 0) {
         const url = result.results[0].artworkUrl100.replace("100x100", "500x500");
         const response = await axios.get(url, {responseType:'arraybuffer'});
         const data = Buffer.from(response.data);
+        console.log(`Track "${song}" has an online artwork!`);
         return data.toString('base64');
       }
+      console.log(`Track "${song}" doesn't has an artwork, using default for not found.`);
       return artNotFoundBase64;
     } catch (e: Error | any) {
+      console.log('Image not found', e);
       return artNotFoundBase64;
     }
   }
 
   //otherwise we can catch the image offline...
   if (iTunesObject.CurrentTrack.Artwork.Count === 0) {
-    return artNotFoundBase64;
+    console.log(`Current Track "${iTunesObject.CurrentTrack.Name}" has no artwork, using TPiTunesX default one`);
+    return defaultImageArtBase64;
   }
 
   let originImage;
+  // checking if output exists.
+
+  if (!jetpack.exists(path.resolve(process.cwd(), 'output'))) {
+    console.log('creating output folder for artworks');
+    jetpack.cwd(process.cwd());
+    jetpack.dir('output');
+  }
+
   switch (iTunesObject.CurrentTrack.Artwork.Item[1].Format) {
     case ITArtworkFormatJPEG:
       originImage = path.join(process.cwd(), 'output', "album_artwork_temp_orig.jpg");
@@ -448,6 +462,7 @@ const getSongInfo = async (song: string|null): Promise<string | null> => {
       return "";
   }
   iTunesObject.CurrentTrack.Artwork.Item[1].SaveArtworkToFile(originImage);
+  console.log(`Current Track "${iTunesObject.CurrentTrack.Name}" has artwork embebed. using it for display.`);
   return fs.readFileSync(originImage).toString("base64");
 };
 

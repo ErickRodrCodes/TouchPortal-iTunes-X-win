@@ -3,8 +3,5 @@
   "version": "1.0.0",
   "main": "iTunesPluginX.js",
   "author": "Erick Rodriguez <tbogard@outlook.com>",
-  "license": "MIT",
-  "bin": {
-    "itunes-x-win": "iTunesPluginX.js"
-  }
+  "license": "MIT"
 }
