@@ -21,7 +21,7 @@
     "zip": "cross-zip ./base ./Installers/TPiTunesX.tpp",
     "clean": "npm-run-all rimraf:*",
     "rimraf:base": "rimraf \"./base/TPiTunesX/**/?(*.node|*.exe|output)\"",
-    "rimraf:bundle": "rimraf \"?(ITunesPluginX.js|*.node)\"",
+    "rimraf:bundle": "rimraf \"bundle/?(ITunesPluginX.js|*.node)\"",
     "rimraf:dist": "rimraf ./dist",
     "make-file": "cp *.node ./base/TPiTunesX"
   },
