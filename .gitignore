@@ -121,3 +121,4 @@ build/
 .vscode/
 output/
 bundle/
+installers/
